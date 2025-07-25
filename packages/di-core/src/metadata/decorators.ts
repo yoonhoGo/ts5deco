@@ -108,7 +108,7 @@ export function PreDestroy(
 /**
  * Provides a service with a specific token
  */
-export function Provider(token: MetadataKey | string, value: any) {
+export function Provide(token: MetadataKey | string, value: any) {
   return function <T extends new (...args: any[]) => any>(
     target: T,
     context: ClassDecoratorContext

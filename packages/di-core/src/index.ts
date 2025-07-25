@@ -8,4 +8,9 @@ export { SampleService } from './sample-decorator';
 export * from './metadata';
 export * from './metadata/decorators';
 
+// Export core types and interfaces
+export * from './types';
+export * from './types/advanced';
+export * from './types/constants';
+
 console.log('DI Core Package loaded successfully');

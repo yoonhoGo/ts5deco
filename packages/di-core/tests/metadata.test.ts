@@ -22,7 +22,7 @@ import {
   Scope,
   PostConstruct,
   PreDestroy,
-  Provider,
+  Provide,
   DESIGN_TYPE
 } from '../src/metadata/decorators';
 
