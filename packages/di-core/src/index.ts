@@ -13,4 +13,7 @@ export * from './types';
 export * from './types/advanced';
 export * from './types/constants';
 
+// Export container implementation
+export * from './container';
+
 console.log('DI Core Package loaded successfully');

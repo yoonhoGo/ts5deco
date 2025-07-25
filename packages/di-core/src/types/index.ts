@@ -194,7 +194,7 @@ export interface IBindingOptions<T> {
 }
 
 export interface IBindingFactoryOptions<T> {
-  withDependencies(...deps: ServiceIdentifier[]): IBindingOptions<T>;
+  withDependencies(...deps: ServiceIdentifier[]): IBindingFinalized<T>;
   inSingletonScope(): IBindingFinalized<T>;
   inPrototypeScope(): IBindingFinalized<T>;
   inTransientScope(): IBindingFinalized<T>;
