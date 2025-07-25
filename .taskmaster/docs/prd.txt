@@ -1,0 +1,114 @@
+# TypeScript 5 Modern Decorator DI/IoC Framework - Product Requirements Document
+
+## 1. 프로젝트 개요
+
+### 1.1 목적
+TypeScript 5의 Modern Decorator를 활용한 고성능 Dependency Injection(DI) 및 Inversion of Control(IoC) 프레임워크 개발
+
+### 1.2 범위
+- Turbo Repository 기반 모노레포 구성
+- 확장 가능한 패키지 구조 (향후 express controller decorator 등 추가 예정)
+- TypeScript 5 Modern Decorator API 활용
+
+## 2. 첫 번째 패키지: Core DI Framework
+
+### 2.1 핵심 기능
+- IoC 컨테이너 구현
+- Dependency Injection 메커니즘
+- Modern Decorator 기반 메타데이터 처리
+- 순환 의존성 감지 및 해결
+- 싱글톤, 프로토타입, 스코프 생명주기 관리
+
+### 2.2 Decorator API
+- @Injectable: 클래스를 DI 컨테이너에 등록
+- @Inject: 의존성 주입 지정
+- @Singleton: 싱글톤 스코프 지정
+- @Scope: 커스텀 스코프 지정
+- @PostConstruct: 초기화 후 실행될 메서드 지정
+
+### 2.3 컨테이너 API
+- Container.register(): 서비스 등록
+- Container.resolve(): 서비스 해결
+- Container.bind(): 인터페이스와 구현체 바인딩
+- Container.createChild(): 자식 컨테이너 생성
+
+### 2.4 성능 요구사항
+- 빠른 의존성 해결 (O(1) 캐싱)
+- 메모리 효율적인 메타데이터 저장
+- Tree-shaking 지원
+
+## 3. 기술적 요구사항
+
+### 3.1 TypeScript 설정
+- TypeScript 5.x
+- experimentalDecorators: false (Modern Decorator 사용)
+- emitDecoratorMetadata: false
+- strict: true
+
+### 3.2 빌드 도구
+- Turbo Repository 설정
+- ESBuild 또는 Rollup 번들링
+- CommonJS, ESM 모듈 지원
+
+### 3.3 테스팅
+- Jest 테스트 프레임워크
+- 단위 테스트 커버리지 90% 이상
+- 통합 테스트 포함
+
+### 3.4 문서화
+- TypeDoc 기반 API 문서
+- README.md 사용 가이드
+- 예제 코드 포함
+
+## 4. 프로젝트 구조
+
+```
+packages/
+├── di-core/           # Core DI Framework
+│   ├── src/
+│   │   ├── decorators/
+│   │   ├── container/
+│   │   ├── metadata/
+│   │   ├── types/
+│   │   └── index.ts
+│   ├── tests/
+│   ├── package.json
+│   └── tsconfig.json
+└── (향후 확장 패키지들)
+    ├── express-decorators/  # Express Controller Decorator 등
+    └── ...
+```
+
+## 5. 개발 단계
+
+### Phase 1: Core 인프라 구축
+- 프로젝트 초기 설정
+- TypeScript 설정 및 빌드 파이프라인
+- 기본 타입 정의
+
+### Phase 2: Metadata 시스템
+- Modern Decorator 메타데이터 수집
+- 의존성 그래프 구축
+- 순환 참조 감지
+
+### Phase 3: Container 구현
+- IoC 컨테이너 핵심 로직
+- 생명주기 관리
+- 의존성 해결 알고리즘
+
+### Phase 4: Decorator 구현
+- @Injectable, @Inject 등 데코레이터
+- 메타데이터 수집 및 처리
+- 타입 안전성 보장
+
+### Phase 5: 테스트 및 최적화
+- 단위/통합 테스트 작성
+- 성능 최적화
+- 문서화 완성
+
+## 6. 성공 기준
+- 모든 핵심 기능 동작
+- 테스트 커버리지 90% 이상
+- TypeScript 5 Modern Decorator 완전 지원
+- 성능 벤치마크 통과
+- 완전한 API 문서화

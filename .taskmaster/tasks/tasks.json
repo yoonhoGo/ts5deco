@@ -1,0 +1,148 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Initialize Turbo Monorepo and Project Structure",
+        "description": "Set up the monorepo using Turbo Repository, create the initial directory structure, and configure package management for extensibility.",
+        "details": "Use Turbo Repo to scaffold the monorepo. Create the 'packages/di-core' directory with 'src', 'tests', and config files. Initialize package.json and tsconfig.json for the core package. Ensure workspace settings allow for future package expansion.",
+        "testStrategy": "Verify monorepo commands (build, test) work across packages. Ensure directory structure matches PRD. Run a sample build to confirm setup.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Configure TypeScript 5.x with Modern Decorator Support",
+        "description": "Set up TypeScript 5.x with strict settings and Modern Decorator API (experimentalDecorators: false, emitDecoratorMetadata: false).",
+        "details": "Install TypeScript 5.x. In tsconfig.json, set 'experimentalDecorators' and 'emitDecoratorMetadata' to false, and 'strict' to true. Ensure compatibility with Modern Decorator syntax. Add type definitions as needed.",
+        "testStrategy": "Run tsc to ensure no config errors. Write a sample decorator using the new API and confirm compilation.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Implement Metadata Collection System for Decorators",
+        "description": "Develop a system to collect and store metadata using Modern Decorator API for classes and members.",
+        "details": "Create a metadata module to handle decorator metadata storage using WeakMap or similar for memory efficiency. Ensure metadata is accessible for dependency resolution and supports tree-shaking.",
+        "testStrategy": "Write unit tests for metadata storage and retrieval. Confirm metadata is correctly attached and garbage collected.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Define Core Types and Interfaces",
+        "description": "Establish TypeScript types and interfaces for services, providers, scopes, and container APIs.",
+        "details": "Create types for service identifiers, provider definitions, scope enums, and container interfaces. Ensure type safety for all public APIs and decorator usage.",
+        "testStrategy": "Type-check sample usage and ensure type errors are caught. Add tests for type inference in decorators.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Develop IoC Container Core Logic",
+        "description": "Implement the core IoC container with registration, resolution, binding, and child container creation.",
+        "details": "Create a Container class with register(), resolve(), bind(), and createChild() methods. Use O(1) caching for fast resolution. Support singleton, prototype, and custom scopes. Handle service graph construction.",
+        "testStrategy": "Write unit tests for all container methods. Test service registration, resolution, and child container isolation.",
+        "priority": "high",
+        "dependencies": [
+          3,
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Lifecycle and Scope Management",
+        "description": "Add support for singleton, prototype, and custom scopes, including lifecycle hooks like @PostConstruct.",
+        "details": "Extend the container to manage object lifecycles. Implement @Singleton, @Scope, and @PostConstruct decorators. Ensure correct instantiation and method invocation per scope.",
+        "testStrategy": "Test lifecycle behavior for each scope. Verify @PostConstruct methods are called after instantiation.",
+        "priority": "medium",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Implement Modern Decorators (@Injectable, @Inject, etc.)",
+        "description": "Create decorators for service registration and dependency injection using the Modern Decorator API.",
+        "details": "Implement @Injectable for class registration, @Inject for property/parameter injection, @Singleton, @Scope, and @PostConstruct. Ensure decorators interact with metadata and container correctly.",
+        "testStrategy": "Write tests for decorator application, metadata generation, and correct injection behavior.",
+        "priority": "high",
+        "dependencies": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement Circular Dependency Detection and Resolution",
+        "description": "Detect and resolve circular dependencies during service resolution.",
+        "details": "Enhance the container to track dependency graphs during resolution. Throw descriptive errors or use proxies to break cycles where possible.",
+        "testStrategy": "Create tests with intentional circular dependencies. Verify detection and error reporting or resolution.",
+        "priority": "medium",
+        "dependencies": [
+          5,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Set Up Build Pipeline and Module Output",
+        "description": "Configure ESBuild or Rollup for bundling, supporting both CommonJS and ESM outputs.",
+        "details": "Add build scripts for both ESBuild and Rollup. Ensure output is tree-shakable and supports both module formats. Validate compatibility with TypeScript 5 decorators.",
+        "testStrategy": "Build the package and verify output formats. Test importing in both CJS and ESM projects.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          5,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Testing, Documentation, and Example Code",
+        "description": "Write comprehensive unit/integration tests, generate API docs with TypeDoc, and provide usage examples.",
+        "details": "Use Jest to achieve 90%+ coverage. Write integration tests for real-world scenarios. Generate TypeDoc documentation and write a README with usage and example code.",
+        "testStrategy": "Run coverage reports, validate documentation output, and manually test example code.",
+        "priority": "high",
+        "dependencies": [
+          7,
+          8,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-25T12:05:05.148Z",
+      "updated": "2025-07-25T12:05:05.148Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
