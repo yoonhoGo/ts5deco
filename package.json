@@ -12,7 +12,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "TypeScript 5 Modern Decorator DI/IoC Framework",
+  "description": "TypeScript 5 Modern Decorator Dependency Injection Framework",
   "packageManager": "npm@10.0.0",
   "workspaces": ["packages/*"],
   "devDependencies": {
