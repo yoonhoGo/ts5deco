@@ -13,7 +13,8 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "node build.config.js",
+    "build:watch": "tsc --watch",
     "dev": "tsc --watch",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -30,13 +31,14 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.0.0",
     "@types/jest": "^29.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "esbuild": "^0.25.8",
+    "eslint": "^8.0.0",
     "jest": "^29.0.0",
     "ts-jest": "^29.0.0",
-    "eslint": "^8.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0"
+    "typescript": "^5.0.0"
   },
   "files": [
     "dist",
