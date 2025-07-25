@@ -1,0 +1,25 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "theme": "default",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeExternals": true,
+  "name": "@ts5deco/di-core",
+  "tsconfig": "tsconfig.json",
+  "sort": ["source-order"],
+  "categoryOrder": [
+    "Container",
+    "Decorators", 
+    "Types",
+    "Metadata",
+    "Utilities"
+  ],
+  "plugin": [],
+  "validation": {
+    "notExported": true,
+    "invalidLink": true,
+    "notDocumented": false
+  }
+}
