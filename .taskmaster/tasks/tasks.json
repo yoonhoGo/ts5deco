@@ -9,8 +9,54 @@
         "testStrategy": "Verify monorepo commands (build, test) work across packages. Ensure directory structure matches PRD. Run a sample build to confirm setup.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Scaffold Monorepo Root with Turbo and Package Manager",
+            "description": "Initialize the monorepo root directory using Turbo Repo and set up the chosen package manager (e.g., pnpm, yarn, npm) with workspace support.",
+            "dependencies": [],
+            "details": "Create the root directory for the monorepo. Run the Turbo Repo initialization command (e.g., `npx create-turbo@latest` or manual setup). Initialize the package manager (e.g., `pnpm init` or `yarn init`) and configure the root `package.json` with a `workspaces` field including `packages/*`. Install Turbo as a dev dependency. Ensure the root is ready for multi-package management.",
+            "status": "done",
+            "testStrategy": "Verify that the root `package.json` includes the correct `workspaces` configuration and that Turbo commands (e.g., `turbo run`) execute without errors."
+          },
+          {
+            "id": 2,
+            "title": "Establish Directory Structure for Packages",
+            "description": "Create the foundational directory structure for the monorepo, including the `packages` folder and the initial core package directory.",
+            "dependencies": [],
+            "details": "Inside the monorepo root, create a `packages` directory. Within `packages`, create a `di-core` directory. Inside `di-core`, create `src` and `tests` subdirectories. This structure supports modular package development and future expansion.",
+            "status": "done",
+            "testStrategy": "Check that the directory tree matches the intended structure: `packages/di-core/src` and `packages/di-core/tests` exist."
+          },
+          {
+            "id": 3,
+            "title": "Initialize Core Package Configuration Files",
+            "description": "Set up `package.json` and `tsconfig.json` for the `di-core` package to enable independent development and TypeScript support.",
+            "dependencies": [],
+            "details": "In `packages/di-core`, create a `package.json` with the package name, version, and main/module fields. Add scripts for build and test. Create a `tsconfig.json` tailored for the package, extending from a base config if desired. Ensure fields are set for extensibility and compatibility with the monorepo.",
+            "status": "done",
+            "testStrategy": "Run `pnpm install` or equivalent in the root and ensure dependencies resolve for `di-core`. Run `tsc --project packages/di-core/tsconfig.json` to confirm TypeScript setup."
+          },
+          {
+            "id": 4,
+            "title": "Configure Monorepo Workspace and Turbo Settings",
+            "description": "Set up root-level configuration files for workspace management and Turbo task orchestration.",
+            "dependencies": [],
+            "details": "At the monorepo root, create or update `turbo.json` to define build, test, and lint pipelines. Ensure the root `package.json` workspaces field includes `packages/*`. Optionally, add a base `tsconfig.json` for shared TypeScript settings. This enables scalable task management and consistent tooling across packages.",
+            "status": "done",
+            "testStrategy": "Run Turbo commands (e.g., `turbo run build`) and verify they execute for the `di-core` package. Confirm workspace expansion is possible by adding a dummy package and checking recognition."
+          },
+          {
+            "id": 5,
+            "title": "Validate Monorepo Setup and Extensibility",
+            "description": "Test the monorepo by running build and test commands, and verify that the structure supports adding new packages easily.",
+            "dependencies": [],
+            "details": "Add a sample source file and test in `di-core`. Run build and test scripts via Turbo and the package manager. Attempt to add a new dummy package under `packages/` and ensure it is recognized by the workspace. Confirm that the setup supports future extensibility.",
+            "status": "done",
+            "testStrategy": "Build and test `di-core` successfully. Add a new package, run Turbo commands, and verify both packages are included in the workspace operations."
+          }
+        ]
       },
       {
         "id": 2,
@@ -141,7 +187,7 @@
     ],
     "metadata": {
       "created": "2025-07-25T12:05:05.148Z",
-      "updated": "2025-07-25T12:05:05.148Z",
+      "updated": "2025-07-25T12:21:07.653Z",
       "description": "Tasks for master context"
     }
   }
