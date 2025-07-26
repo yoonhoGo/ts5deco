@@ -1,0 +1,263 @@
+# ts5deco Express Controller Framework - LLMs.txt
+
+이 파일은 AI 언어 모델들이 이 프로젝트를 더 잘 이해하고 도움을 줄 수 있도록 작성된 문서입니다.
+This file is written to help AI language models better understand and assist with this project.
+
+## 프로젝트 개요 / Project Overview
+
+### 한국어
+ts5deco Express Controller Framework는 TypeScript 5의 현대적인 데코레이터를 사용하는 Express.js 기반 웹 프레임워크입니다.
+
+**핵심 특징:**
+- TypeScript 5 현대적 데코레이터 사용 (레거시 실험적 데코레이터 아님)
+- Express.js와의 완벽한 통합
+- 강력한 타입 안정성
+- 데코레이터 기반의 깔끔한 아키텍처
+- 내장 미들웨어 지원
+- 자동 라우트 등록
+- reflect-metadata 없이 네이티브 WeakMap 기반 메타데이터 저장
+- 타입 안전한 응답 클래스 (JsonResponse, TextResponse, NoContentResponse 등)
+- OpenAPI/Swagger 통합 및 타입 생성
+- CLI 도구 제공
+
+### English
+ts5deco Express Controller Framework is an Express.js-based web framework that uses TypeScript 5's modern decorators.
+
+**Key Features:**
+- Uses TypeScript 5 modern decorators (not legacy experimental decorators)
+- Seamless Express.js integration
+- Strong type safety
+- Clean decorator-based architecture
+- Built-in middleware support
+- Automatic route registration
+- Native WeakMap-based metadata storage without reflect-metadata
+- Type-safe response classes (JsonResponse, TextResponse, NoContentResponse, etc.)
+- OpenAPI/Swagger integration and type generation
+- CLI tools included
+
+## 프로젝트 구조 / Project Structure
+
+```
+src/
+├── cli/                    # CLI 도구 / CLI tools
+├── decorators/            # 데코레이터 정의 / Decorator definitions
+│   ├── controller.ts      # @Controller 데코레이터
+│   ├── middleware.ts      # 미들웨어 데코레이터들
+│   ├── param.ts          # 파라미터 데코레이터들
+│   └── route.ts          # 라우트 데코레이터들 (@Get, @Post 등)
+├── lib/                   # 핵심 라이브러리 로직
+├── responses/             # 응답 클래스들
+│   ├── BaseResponse.ts    # 기본 응답 클래스
+│   ├── JsonResponse.ts    # JSON 응답
+│   ├── TextResponse.ts    # 텍스트 응답
+│   ├── NoContentResponse.ts # 204 No Content
+│   ├── RedirectResponse.ts  # 리다이렉트
+│   └── FileResponse.ts    # 파일 다운로드
+├── types/                 # 타입 정의
+└── utils/                 # 유틸리티 함수들
+```
+
+## 주요 API / Main APIs
+
+### 데코레이터 / Decorators
+
+#### @Controller(path?, options?)
+컨트롤러 클래스를 정의합니다.
+```typescript
+@Controller('/api/users')
+export class UserController {
+  // ...
+}
+```
+
+#### 라우트 데코레이터 / Route Decorators
+- `@Get(path?, options?)` - GET 요청
+- `@Post(path?, options?)` - POST 요청
+- `@Put(path?, options?)` - PUT 요청
+- `@Delete(path?, options?)` - DELETE 요청
+- `@Patch(path?, options?)` - PATCH 요청
+
+#### 미들웨어 데코레이터 / Middleware Decorators
+- `@Use(...middlewares)` - 미들웨어 적용
+- `@Authenticated(middleware)` - 인증 미들웨어
+- `@Authorized(middleware)` - 권한 미들웨어
+- `@Validated(middleware)` - 검증 미들웨어
+
+### 응답 시스템 / Response System
+
+타입 안전한 응답 클래스들을 제공합니다:
+
+```typescript
+// JSON 응답
+return new JsonResponse<User, 200>(200, user);
+return JsonResponses.ok<User>(user);
+
+// 텍스트 응답
+return new TextResponse<'OK', 200>(200, 'OK');
+return TextResponses.ok('Service is healthy');
+
+// 기타 응답
+return new NoContentResponse(); // 204
+return new RedirectResponse('/new-path', 302);
+return new FileResponse('/path/to/file.pdf', 'document.pdf');
+```
+
+### 등록 함수 / Registration Functions
+
+```typescript
+// 컨트롤러들을 앱에 등록
+registerControllers(app, [UserController], '/api');
+
+// 라우터 생성
+const router = createRouter([UserController]);
+
+// 단일 컨트롤러 등록
+registerController(router, UserController);
+```
+
+## TypeScript 설정 / TypeScript Configuration
+
+이 프로젝트는 특별한 TypeScript 설정이 필요합니다:
+
+```json
+{
+  "compilerOptions": {
+    "experimentalDecorators": false,  // 중요: false로 설정
+    "emitDecoratorMetadata": false,   // 중요: false로 설정
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "commonjs"
+  }
+}
+```
+
+**주의사항:** 
+- `experimentalDecorators`는 반드시 `false`여야 합니다 (TypeScript 5 현대적 데코레이터 사용)
+- `reflect-metadata` 패키지는 사용하지 않습니다
+
+## CLI 사용법 / CLI Usage
+
+### 프로젝트 초기화 / Project Initialization
+```bash
+npx ts5deco-express-controller init --dir ./my-project
+```
+
+### OpenAPI 타입 생성 / OpenAPI Type Generation
+```bash
+npx ts5deco-express-controller generate --input ./api/openapi.yaml --output ./src/types/generated
+```
+
+## 개발 지침 / Development Guidelines
+
+### AI 모델을 위한 중요 정보 / Important Information for AI Models
+
+1. **데코레이터 시스템**: 이 프로젝트는 TypeScript 5의 현대적 데코레이터를 사용합니다. 레거시 실험적 데코레이터와는 다른 문법과 동작을 가집니다.
+
+2. **메타데이터 저장**: `reflect-metadata` 대신 네이티브 `WeakMap`을 사용하여 메타데이터를 저장합니다.
+
+3. **응답 시스템**: 프레임워크의 응답 클래스들을 사용하여 타입 안전한 응답을 만들 수 있습니다. 기존의 Express `res.json()` 방식도 여전히 사용 가능합니다.
+
+4. **라우트 핸들러**: 모든 라우트 핸들러는 Express의 표준 `(req, res, next)` 매개변수를 받습니다.
+
+5. **미들웨어**: Express 표준 미들웨어와 완전히 호환됩니다.
+
+### 코드 예제 패턴 / Code Example Patterns
+
+#### 기본 컨트롤러 / Basic Controller
+```typescript
+import express from 'express';
+import { Controller, Get, Post } from 'ts5deco-express-controller';
+
+@Controller('/api/users')
+export class UserController {
+  @Get()
+  async getUsers(req: express.Request, res: express.Response, next: express.NextFunction) {
+    // 로직 구현
+    return { users: [] };
+  }
+
+  @Post()
+  async createUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const userData = req.body;
+    // 생성 로직
+    return { user: userData };
+  }
+}
+```
+
+#### 타입 안전한 응답 / Type-Safe Responses
+```typescript
+import { JsonResponse, JsonResponses } from 'ts5deco-express-controller';
+
+@Controller('/api/users')
+export class UserController {
+  @Get('/:id')
+  async getUserById(req: express.Request): Promise<JsonResponse<User, 200> | JsonResponse<ErrorResponse, 404>> {
+    const user = await this.findUser(req.params.id);
+    
+    if (!user) {
+      return JsonResponses.notFound<ErrorResponse>({
+        error: 'User not found'
+      });
+    }
+    
+    return JsonResponses.ok<User>(user);
+  }
+}
+```
+
+#### 미들웨어 사용 / Using Middleware
+```typescript
+import { Controller, Get, Use, Authenticated } from 'ts5deco-express-controller';
+
+@Controller('/api/protected')
+export class ProtectedController {
+  @Get('/data')
+  @Use(loggingMiddleware)
+  @Authenticated(authMiddleware)
+  async getProtectedData(req: express.Request, res: express.Response, next: express.NextFunction) {
+    return { data: 'protected' };
+  }
+}
+```
+
+## 패키지 정보 / Package Information
+
+- **이름 / Name**: ts5deco-express-controller
+- **버전 / Version**: 0.1.0
+- **라이선스 / License**: MIT
+- **저장소 / Repository**: https://github.com/yoonhoGo/ts5deco
+- **주요 의존성 / Main Dependencies**: 
+  - express ^4.18.0
+  - commander ^12.0.0
+- **개발 의존성 / Dev Dependencies**: 
+  - typescript ^5.0.0
+  - @types/express ^4.17.0
+  - jest ^29.0.0
+
+## 문제 해결 / Troubleshooting
+
+### 일반적인 문제들 / Common Issues
+
+1. **데코레이터가 작동하지 않음**: 
+   - `tsconfig.json`에서 `experimentalDecorators: false` 확인
+   - TypeScript 5.0+ 사용 확인
+
+2. **타입 오류**:
+   - 응답 클래스의 제네릭 타입 확인
+   - Express 타입 정의 설치 확인
+
+3. **라우트가 등록되지 않음**:
+   - 컨트롤러가 `registerControllers` 함수에 전달되었는지 확인
+   - 데코레이터 순서 확인
+
+## 확장 가능성 / Extensibility
+
+이 프레임워크는 다음과 같은 방식으로 확장 가능합니다:
+
+1. 커스텀 데코레이터 생성
+2. 커스텀 응답 클래스 추가
+3. 미들웨어 체인 확장
+4. OpenAPI 스키마 기반 타입 생성
+
+AI 모델들은 이 정보를 바탕으로 사용자가 이 프레임워크를 사용할 때 적절한 도움을 제공할 수 있습니다.
