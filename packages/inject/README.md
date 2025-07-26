@@ -1,4 +1,4 @@
-# @ts5deco/inject
+# ts5deco-inject
 
 A modern Dependency Injection framework for TypeScript 5, built using the latest Modern Decorator API (TC39 Stage 3).
 
@@ -17,13 +17,13 @@ A modern Dependency Injection framework for TypeScript 5, built using the latest
 ## Installation
 
 ```bash
-npm install @ts5deco/inject
+npm install ts5deco-inject
 ```
 
 ## Quick Start
 
 ```typescript
-import { Container, Injectable, Inject, createMetadataKey } from '@ts5deco/inject';
+import { Container, Injectable, Inject, createMetadataKey } from 'ts5deco-inject';
 
 // Define a metadata key for type-safe injection
 const DATABASE_URL = createMetadataKey<string>('database.url');
@@ -303,7 +303,7 @@ import {
   ServiceNotFoundError,
   CircularDependencyError,
   InvalidProviderError 
-} from '@ts5deco/inject';
+} from 'ts5deco-inject';
 
 try {
   const service = container.resolve('unknown-service');
@@ -317,7 +317,7 @@ try {
 ## Real-world Example
 
 ```typescript
-import { Container, Injectable, Inject, createMetadataKey, PostConstruct } from '@ts5deco/inject';
+import { Container, Injectable, Inject, createMetadataKey, PostConstruct } from 'ts5deco-inject';
 
 // Tokens
 const CONFIG = createMetadataKey<AppConfig>('config');

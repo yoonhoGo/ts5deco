@@ -1,5 +1,5 @@
 {
-  "name": "@ts5deco/inject",
+  "name": "ts5deco-inject",
   "version": "0.1.0",
   "description": "TypeScript 5 Modern Decorator Dependency Injection Framework",
   "main": "dist/index.js",
