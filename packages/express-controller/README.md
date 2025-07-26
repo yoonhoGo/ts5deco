@@ -11,6 +11,8 @@ Modern TypeScript 5 Decorator-based Express Controller Framework
 - 🛡️ **Middleware Support**: Built-in middleware support
 - 🔄 **Auto Registration**: Automatic route registration
 - 🚫 **No reflect-metadata**: Uses native WeakMap-based metadata storage
+- ✨ **Type-Safe Responses**: Generic response classes with compile-time type checking
+- 🎭 **Response System**: JsonResponse, TextResponse, NoContentResponse, RedirectResponse, and FileResponse
 
 ## Installation
 
@@ -204,6 +206,140 @@ import { registerController } from 'ts5deco-express-controller';
 const router = express.Router();
 registerController(router, UserController);
 ```
+
+## Response System
+
+The framework provides a powerful type-safe response system that eliminates repetitive `res.status().json()` boilerplate code.
+
+### Basic Usage
+
+```typescript
+import { 
+  JsonResponse, 
+  JsonResponses,
+  TextResponse,
+  TextResponses,
+  NoContentResponse,
+  RedirectResponse,
+  FileResponse
+} from 'ts5deco-express-controller';
+
+@Controller('/api/users')
+export class UserController {
+  
+  // Type-safe JSON responses
+  @Get('/')
+  async getUsers(): Promise<JsonResponse<User[], 200>> {
+    const users = await this.userService.getUsers();
+    return new JsonResponse<User[], 200>(200, users);
+  }
+
+  @Get('/:id')
+  async getUserById(req: Request): Promise<JsonResponse<User, 200> | JsonResponse<ErrorResponse, 404>> {
+    const user = await this.userService.findById(req.params.id);
+    
+    if (!user) {
+      return JsonResponses.notFound<ErrorResponse>({
+        error: 'User not found',
+        message: 'The requested user does not exist'
+      });
+    }
+    
+    return JsonResponses.ok<User>(user);
+  }
+
+  @Post('/')
+  async createUser(req: Request): Promise<JsonResponse<User, 201>> {
+    const user = await this.userService.create(req.body);
+    return JsonResponses.created<User>(user);
+  }
+
+  @Delete('/:id')
+  async deleteUser(): Promise<NoContentResponse> {
+    await this.userService.delete(req.params.id);
+    return new NoContentResponse(); // 204 No Content
+  }
+
+  // Text responses with literal types
+  @Get('/health')
+  async healthCheck(): Promise<TextResponse<'healthy', 200>> {
+    return new TextResponse<'healthy', 200>(200, 'healthy');
+  }
+
+  // Redirects
+  @Get('/old-endpoint')
+  async oldEndpoint(): Promise<RedirectResponse> {
+    return new RedirectResponse('/api/users', 301); // Permanent redirect
+  }
+
+  // File downloads
+  @Get('/export')
+  async exportUsers(): Promise<FileResponse> {
+    return new FileResponse('/tmp/users.csv', 'users-export.csv', true);
+  }
+}
+```
+
+### Response Types
+
+#### JsonResponse<TData, TStatus>
+
+Type-safe JSON responses with generics for data and status code:
+
+```typescript
+// Direct usage
+return new JsonResponse<User, 200>(200, user);
+
+// Convenience methods
+return JsonResponses.ok<User>(user);           // 200 OK
+return JsonResponses.created<User>(user);      // 201 Created
+return JsonResponses.badRequest<Error>(error); // 400 Bad Request
+return JsonResponses.notFound<Error>(error);   // 404 Not Found
+```
+
+#### TextResponse<TText, TStatus>
+
+Type-safe text responses:
+
+```typescript
+// With literal types
+return new TextResponse<'OK', 200>(200, 'OK');
+
+// With template literal types
+return new TextResponse<`v${string}`, 200>(200, 'v1.2.3');
+
+// With union types
+return new TextResponse<'running' | 'stopped', 200>(200, 'running');
+
+// Convenience methods
+return TextResponses.ok('Service is healthy');
+```
+
+#### Other Response Types
+
+```typescript
+// 204 No Content
+return new NoContentResponse();
+
+// Redirects
+return new RedirectResponse('/new-path', 302);
+return RedirectResponses.permanent('/new-path'); // 301
+return RedirectResponses.temporary('/new-path'); // 302
+
+// File responses
+return new FileResponse('/path/to/file.pdf', 'document.pdf');
+return FileResponses.attachment('/path/to/file.zip', 'archive.zip');
+```
+
+### Benefits
+
+- **Type Safety**: Compile-time checking of response data and status codes
+- **Clean Code**: No more repetitive `res.status().json()` calls
+- **Consistency**: Standardized response handling across your application
+- **IDE Support**: Full IntelliSense and auto-completion
+- **Backward Compatible**: Works alongside existing Express response methods
+
+For complete documentation, see [Response System Documentation](./docs/RESPONSE-SYSTEM.md).
 
 ## Examples
 

@@ -5,9 +5,7 @@ const {
   Post, 
   Delete,
   JsonResponse,
-  JsonResponses,
   TextResponse,
-  TextResponses,
   NoContentResponse,
   RedirectResponse,
   RedirectResponses,
@@ -61,19 +59,19 @@ function testResponseInstantiation() {
   const jsonResp = new JsonResponse(200, { test: 'data' });
   console.log('✓ JsonResponse created:', jsonResp.statusCode, jsonResp.data);
   
-  // JsonResponses convenience methods 테스트
-  const jsonOk = JsonResponses.ok({ message: 'OK' });
-  const jsonError = JsonResponses.badRequest({ error: 'Bad Request' });
-  console.log('✓ JsonResponses.ok:', jsonOk.statusCode);
-  console.log('✓ JsonResponses.badRequest:', jsonError.statusCode);
+  // JsonResponse static convenience methods 테스트
+  const jsonOk = JsonResponse.ok({ message: 'OK' });
+  const jsonError = JsonResponse.badRequest({ error: 'Bad Request' });
+  console.log('✓ JsonResponse.ok:', jsonOk.statusCode);
+  console.log('✓ JsonResponse.badRequest:', jsonError.statusCode);
 
   // TextResponse 테스트
   const textResp = new TextResponse(200, 'Hello World');
   console.log('✓ TextResponse created:', textResp.statusCode, textResp.text);
 
-  // TextResponses convenience methods 테스트
-  const textOk = TextResponses.ok('All good');
-  console.log('✓ TextResponses.ok:', textOk.statusCode, textOk.text);
+  // TextResponse static convenience methods 테스트
+  const textOk = TextResponse.ok('All good');
+  console.log('✓ TextResponse.ok:', textOk.statusCode, textOk.text);
 
   // NoContentResponse 테스트
   const noContentResp = new NoContentResponse();
