@@ -8,7 +8,18 @@
     "emitDeclarationOnly": false,
     "declaration": true,
     "declarationMap": true,
-    "strict": true
+    "strict": true,
+    "alwaysStrict": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true
   },
   "include": [
     "src/**/*"

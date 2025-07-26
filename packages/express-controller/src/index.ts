@@ -6,7 +6,10 @@
 export * from './decorators/controller';
 export * from './decorators/route';
 export * from './decorators/middleware';
+export * from './decorators/typed-route';
 export * from './types';
+export * from './types/openapi';
+export * from './types/branded-response';
 export * from './router';
 export * from './metadata';
 export * from './responses';
@@ -15,3 +18,4 @@ export * from './responses';
 export * from './lib/type-generator';
 export * from './lib/init';
 export * from './utils/path-converter';
+export * from './utils/openapi-path-converter';

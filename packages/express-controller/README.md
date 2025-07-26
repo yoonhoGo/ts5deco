@@ -14,6 +14,7 @@ Modern TypeScript 5 Decorator-based Express Controller Framework
 - ✨ **Type-Safe Responses**: Generic response classes with compile-time type checking
 - 🎭 **Response System**: JsonResponse, TextResponse, NoContentResponse, RedirectResponse, and FileResponse
 - 📋 **OpenAPI Integration**: Generate TypeScript types from OpenAPI/Swagger specifications
+- 🔒 **OpenAPI Type Safety**: Compile-time response type validation with OpenAPI specs
 - 🛠️ **CLI Tools**: Built-in CLI for project initialization and type generation
 - 🔗 **Programmatic API**: Full programmatic control over type generation
 
@@ -450,6 +451,101 @@ await generateTypes({
 - **Zero Runtime Overhead**: Pure compile-time type checking
 
 For complete documentation, see [OpenAPI Integration Guide](./docs/OPENAPI-TYPES.md).
+
+## OpenAPI Type Safety
+
+The framework provides compile-time type safety by connecting OpenAPI specifications with route decorators. This ensures your API implementation exactly matches your OpenAPI spec.
+
+### Basic Usage
+
+```typescript
+import { createTypedRoutes } from 'ts5deco-express-controller';
+import type { paths } from './types/generated/api'; // Generated from OpenAPI
+import type { ApiResponse } from 'ts5deco-express-controller';
+
+// Create type-safe route decorators
+const TypedRoutes = createTypedRoutes<paths>();
+
+@Controller('/api')
+export class UserController {
+  
+  // ✅ Type-safe: Only allows responses defined in OpenAPI spec
+  @TypedRoutes.Get('/users/{id}')
+  async getUserById(): Promise<ApiResponse<paths, '/users/{id}', 'get'>> {
+    return JsonResponse.ok(user);     // ✅ 200 response (defined in spec)
+    return JsonResponse.notFound(err); // ✅ 404 response (defined in spec)
+    // return JsonResponse.created(user); // ❌ Compile error: 201 not in spec
+  }
+
+  @TypedRoutes.Post('/users')
+  async createUser(): Promise<ApiResponse<paths, '/users', 'post'>> {
+    return JsonResponse.created(user);    // ✅ 201 response (defined in spec)
+    return JsonResponse.badRequest(err);  // ✅ 400 response (defined in spec)
+    // return JsonResponse.ok(user);      // ❌ Compile error: 200 not in spec
+  }
+}
+```
+
+### Setup Steps
+
+1. **Generate types from OpenAPI spec:**
+```bash
+npx openapi-typescript ./openapi.yaml -o ./src/types/generated/api.d.ts
+```
+
+2. **Use type-safe decorators:**
+```typescript
+const TypedRoutes = createTypedRoutes<paths>();
+```
+
+3. **Define type-safe methods:**
+```typescript
+@TypedRoutes.Get('/users/{id}')
+async getUserById(): Promise<ApiResponse<paths, '/users/{id}', 'get'>> {
+  // Implementation must match OpenAPI spec
+}
+```
+
+### Benefits
+
+- **Enhanced Developer Experience**: IDE auto-completion and type hints
+- **OpenAPI Sync**: Clear connection between API implementation and specification  
+- **Type Guidance**: Explicit guidance on allowed status codes and response types
+- **Code Consistency**: Ensures consistent API implementation patterns
+- **Zero Runtime Cost**: Type checking happens only at compile time
+
+**Note**: Due to TypeScript's structural typing, this system provides enhanced developer experience and code guidance rather than complete compile-time error prevention. The focus is on improving code quality and maintaining consistency with OpenAPI specifications.
+
+### Path Conversion
+
+OpenAPI paths (`/users/{id}`) are automatically converted to Express paths (`/users/:id`):
+
+```typescript
+@TypedRoutes.Get('/users/{id}')           // OpenAPI path
+// Becomes: app.get('/users/:id', ...)    // Express route
+```
+
+### Migration Strategy
+
+You can gradually migrate from regular decorators to type-safe ones:
+
+```typescript
+export class UserController {
+  // Existing code - no type checking
+  @Get('/users/legacy')
+  async legacyEndpoint() {
+    return JsonResponse.ok(data); // Any status code allowed
+  }
+
+  // New code - type-safe
+  @TypedRoutes.Get('/users')
+  async typedEndpoint(): Promise<ApiResponse<paths, '/users', 'get'>> {
+    return JsonResponse.ok(data); // Only spec-defined responses allowed
+  }
+}
+```
+
+For complete examples and advanced usage, see [Typed Routes Guide](./examples/TYPED_ROUTES_GUIDE.md).
 
 ## Examples
 
