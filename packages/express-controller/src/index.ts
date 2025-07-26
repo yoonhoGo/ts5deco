@@ -10,3 +10,8 @@ export * from './types';
 export * from './router';
 export * from './metadata';
 export * from './responses';
+
+// OpenAPI 타입 생성 API
+export * from './lib/type-generator';
+export * from './lib/init';
+export * from './utils/path-converter';

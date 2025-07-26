@@ -5,6 +5,9 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "bin": {
+    "ts5deco-express-controller": "./dist/cli/index.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -51,6 +54,7 @@
   },
   "homepage": "https://github.com/yoonhoGo/ts5deco#readme",
   "dependencies": {
+    "commander": "^12.0.0",
     "express": "^4.18.0"
   },
   "devDependencies": {

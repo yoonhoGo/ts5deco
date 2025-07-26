@@ -13,6 +13,9 @@ Modern TypeScript 5 Decorator-based Express Controller Framework
 - 🚫 **No reflect-metadata**: Uses native WeakMap-based metadata storage
 - ✨ **Type-Safe Responses**: Generic response classes with compile-time type checking
 - 🎭 **Response System**: JsonResponse, TextResponse, NoContentResponse, RedirectResponse, and FileResponse
+- 📋 **OpenAPI Integration**: Generate TypeScript types from OpenAPI/Swagger specifications
+- 🛠️ **CLI Tools**: Built-in CLI for project initialization and type generation
+- 🔗 **Programmatic API**: Full programmatic control over type generation
 
 ## Installation
 
@@ -340,6 +343,113 @@ return FileResponses.attachment('/path/to/file.zip', 'archive.zip');
 - **Backward Compatible**: Works alongside existing Express response methods
 
 For complete documentation, see [Response System Documentation](./docs/RESPONSE-SYSTEM.md).
+
+## OpenAPI Integration
+
+The framework supports generating TypeScript types from OpenAPI/Swagger specifications, ensuring type safety between your API documentation and implementation.
+
+### Quick Start with OpenAPI
+
+#### 1. Initialize a New Project
+
+```bash
+npx ts5deco-express-controller init --dir ./my-api-project
+```
+
+#### 2. Generate Types from OpenAPI Spec
+
+```bash
+npx ts5deco-express-controller generate --input ./api/openapi.yaml --output ./src/types/generated
+```
+
+#### 3. Use Generated Types in Controllers
+
+```typescript
+import { Controller, Get, Post, JsonResponses } from 'ts5deco-express-controller';
+import type { User, ErrorResponse, CreateUserRequest } from './types/api';
+
+@Controller('/api/users')
+export class UserController {
+  @Get('/:id')
+  async getUserById(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<JsonResponse<User, 200> | JsonResponse<ErrorResponse, 404>> {
+    const user = await this.userService.findById(req.params.id);
+    
+    if (!user) {
+      return JsonResponses.notFound<ErrorResponse>({
+        error: 'NOT_FOUND',
+        message: 'User not found'
+      });
+    }
+    
+    return JsonResponses.ok<User>(user);
+  }
+
+  @Post('/')
+  async createUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<JsonResponse<User, 201>> {
+    const userData = req.body as CreateUserRequest;
+    const user = await this.userService.create(userData);
+    return JsonResponses.created<User>(user);
+  }
+}
+```
+
+### CLI Commands
+
+#### Project Initialization
+
+```bash
+# Initialize new project with OpenAPI setup
+npx ts5deco-express-controller init --dir ./my-project
+```
+
+#### Type Generation
+
+```bash
+# Generate types from OpenAPI spec
+npx ts5deco-express-controller generate --input ./api/openapi.yaml --output ./src/types/generated
+
+# With custom helper files
+npx ts5deco-express-controller generate \
+  --input ./api/openapi.yaml \
+  --output ./src/types/generated \
+  --api-types ./src/types/api.ts \
+  --utils ./src/types/openapi-utils.ts
+```
+
+### Programmatic API
+
+```typescript
+import { generateTypes, initProject } from 'ts5deco-express-controller';
+
+// Initialize project
+await initProject('./my-project');
+
+// Generate types
+await generateTypes({
+  input: './api/openapi.yaml',
+  outputDir: './src/types/generated',
+  apiTypesPath: './src/types/api.ts',
+  utilsPath: './src/types/openapi-utils.ts',
+});
+```
+
+### Benefits
+
+- **Single Source of Truth**: Your OpenAPI spec drives both documentation and types
+- **Compile-time Safety**: Catch type mismatches before runtime
+- **Auto-completion**: Full IDE support with generated types
+- **Consistency**: Ensure API implementation matches specification
+- **Zero Runtime Overhead**: Pure compile-time type checking
+
+For complete documentation, see [OpenAPI Integration Guide](./docs/OPENAPI-TYPES.md).
 
 ## Examples
 

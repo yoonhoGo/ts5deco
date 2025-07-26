@@ -11,13 +11,28 @@ The `ts5deco-express-controller` framework now supports OpenAPI type generation 
 - Get IntelliSense support for API types
 - Maintain a single source of truth for your API schema
 
-## Setup
+## Installation and Setup
 
-### 1. Install Dependencies
+### 1. Install the Package
 
 ```bash
-npm install --save-dev openapi-typescript
+npm install ts5deco-express-controller
 ```
+
+### 2. Initialize a New Project (Optional)
+
+For new projects, you can use the CLI to initialize a complete setup:
+
+```bash
+npx ts5deco-express-controller init --dir ./my-api-project
+```
+
+This creates:
+- Basic project structure
+- Sample OpenAPI specification
+- TypeScript configuration
+- Type generation scripts
+- Example controller with types
 
 ### 2. Create Your OpenAPI Specification
 
@@ -84,13 +99,65 @@ components:
 
 ### 3. Generate Types
 
-Run the type generation script:
+#### Method 1: Using CLI (Recommended)
+
+Generate types using the CLI command:
+
+```bash
+# Generate types from OpenAPI spec
+npx ts5deco-express-controller generate --input ./api/openapi.yaml --output ./src/types/generated
+
+# With custom paths for helper files
+npx ts5deco-express-controller generate \
+  --input ./api/openapi.yaml \
+  --output ./src/types/generated \
+  --api-types ./src/types/api.ts \
+  --utils ./src/types/openapi-utils.ts
+```
+
+#### Method 2: Using npm scripts
+
+Add the following to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "generate": "ts5deco-express-controller generate --input ./api/openapi.yaml --output ./src/types/generated",
+    "generate:types": "npm run generate"
+  }
+}
+```
+
+Then run:
 
 ```bash
 npm run generate
 ```
 
-This will:
+#### Method 3: Programmatic API
+
+For custom build scripts or advanced integration:
+
+```typescript
+import { generateTypes, initProject } from 'ts5deco-express-controller';
+
+async function setupTypes() {
+  // Initialize project structure (optional)
+  await initProject('./my-project');
+  
+  // Generate types
+  await generateTypes({
+    input: './api/openapi.yaml',
+    outputDir: './src/types/generated',
+    apiTypesPath: './src/types/api.ts',
+    utilsPath: './src/types/openapi-utils.ts',
+  });
+}
+
+setupTypes().catch(console.error);
+```
+
+All methods will:
 1. Generate TypeScript types from your OpenAPI spec
 2. Create type utilities for easy usage
 3. Update helper files automatically
@@ -189,12 +256,95 @@ const user: API.User = {
 const response: APIResponse.GetUser = user;
 ```
 
+## CLI Reference
+
+### `init` Command
+
+Initialize a new project with complete OpenAPI integration:
+
+```bash
+npx ts5deco-express-controller init [options]
+```
+
+**Options:**
+- `--dir <directory>`: Target directory for initialization (default: current directory)
+
+**Example:**
+```bash
+npx ts5deco-express-controller init --dir ./my-api-project
+```
+
+### `generate` Command
+
+Generate TypeScript types from OpenAPI specification:
+
+```bash
+npx ts5deco-express-controller generate [options]
+```
+
+**Options:**
+- `--input <file>`: Path to OpenAPI specification file (YAML or JSON)
+- `--output <directory>`: Output directory for generated types
+- `--api-types <file>`: Path for API type aliases file (optional)
+- `--utils <file>`: Path for utility types file (optional)
+
+**Examples:**
+```bash
+# Basic usage
+npx ts5deco-express-controller generate --input ./api/openapi.yaml --output ./src/types/generated
+
+# With custom helper files
+npx ts5deco-express-controller generate \
+  --input ./api/openapi.yaml \
+  --output ./src/types/generated \
+  --api-types ./src/types/api.ts \
+  --utils ./src/types/openapi-utils.ts
+```
+
+## Programmatic API Reference
+
+### `generateTypes(options)`
+
+Generate types programmatically:
+
+```typescript
+import { generateTypes } from 'ts5deco-express-controller';
+
+interface GenerateTypesOptions {
+  input: string;           // Path to OpenAPI spec
+  outputDir: string;       // Output directory
+  apiTypesPath?: string;   // Optional: API types file path
+  utilsPath?: string;      // Optional: Utils file path
+}
+
+await generateTypes({
+  input: './api/openapi.yaml',
+  outputDir: './src/types/generated',
+  apiTypesPath: './src/types/api.ts',
+  utilsPath: './src/types/openapi-utils.ts',
+});
+```
+
+### `initProject(directory)`
+
+Initialize a new project structure:
+
+```typescript
+import { initProject } from 'ts5deco-express-controller';
+
+// Initialize in current directory
+await initProject('.');
+
+// Initialize in specific directory
+await initProject('./my-new-project');
+```
+
 ## Path Conversion
 
 OpenAPI uses `{param}` syntax while Express uses `:param`. The framework handles this automatically:
 
 ```typescript
-import { convertOpenAPIPath, convertExpressPath } from './utils/path-converter';
+import { convertOpenAPIPath, convertExpressPath } from 'ts5deco-express-controller';
 
 // Convert OpenAPI to Express
 convertOpenAPIPath('/users/{id}'); // Returns: '/users/:id'
