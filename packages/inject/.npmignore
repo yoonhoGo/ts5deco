@@ -1,0 +1,60 @@
+# Development files
+src/
+tests/
+examples/
+coverage/
+*.test.ts
+*.spec.ts
+
+# Configuration files
+jest.config.js
+tsconfig.json
+typedoc.json
+build.config.js
+.eslintrc.*
+
+# Development dependencies
+node_modules/
+.turbo/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env

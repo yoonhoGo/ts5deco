@@ -29,10 +29,22 @@
     "dependency-injection",
     "ioc",
     "decorator",
-    "modern-decorator"
+    "modern-decorator",
+    "di",
+    "container",
+    "inject",
+    "typescript5"
   ],
-  "author": "",
+  "author": "ts5deco",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ts5deco/inject.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ts5deco/inject/issues"
+  },
+  "homepage": "https://github.com/ts5deco/inject#readme",
   "devDependencies": {
     "@types/jest": "^29.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -47,6 +59,7 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ]
 }

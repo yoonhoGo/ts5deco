@@ -450,6 +450,14 @@ Ensure your `tsconfig.json` includes:
 
 For complete API documentation, see the generated [TypeDoc documentation](./docs/).
 
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
 ## License
 
-MIT License - see LICENSE file for details.
+MIT License - see [LICENSE](./LICENSE) file for details.
+
+## Support
+
+If you have any questions or issues, please open an issue on [GitHub](https://github.com/ts5deco/inject/issues).
