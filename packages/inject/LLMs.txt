@@ -1,0 +1,261 @@
+# ts5deco-inject - TypeScript 5 Modern Decorator DI Framework
+
+This file provides AI/LLM-friendly documentation for the ts5deco-inject library.
+
+## Package Information
+- Name: ts5deco-inject
+- Version: 0.1.1
+- NPM: https://www.npmjs.com/package/ts5deco-inject
+- Repository: https://github.com/yoonhoGo/ts5deco
+- License: MIT
+
+## What is ts5deco-inject?
+A modern Dependency Injection framework for TypeScript 5 that uses the latest Modern Decorator API (TC39 Stage 3). It provides type-safe, performant dependency injection with multiple service scopes and lifecycle management.
+
+## Key Features
+- Modern Decorators (TypeScript 5, not experimental)
+- Multiple service scopes (Singleton, Prototype, Transient)
+- Type-safe injection with createMetadataKey<T>()
+- Fluent binding API
+- Automatic circular dependency detection
+- Lifecycle hooks (@PostConstruct, @PreDestroy)
+- Child container support
+- CommonJS and ESM support
+
+## Installation
+```bash
+npm install ts5deco-inject
+```
+
+## Basic Usage Pattern
+```typescript
+import { Container, Injectable, Inject, createMetadataKey } from 'ts5deco-inject';
+
+// 1. Create type-safe tokens
+const CONFIG = createMetadataKey<AppConfig>('config');
+const LOGGER = createMetadataKey<Logger>('logger');
+
+// 2. Define injectable services
+@Injectable()
+class UserService {
+  @Inject(CONFIG)
+  private config!: AppConfig;
+  
+  @Inject(LOGGER)
+  private logger!: Logger;
+  
+  @PostConstruct
+  initialize() {
+    this.logger.info('UserService initialized');
+  }
+}
+
+// 3. Setup container and register services
+const container = new Container();
+
+container.register({
+  type: 'value',
+  token: CONFIG,
+  useValue: { apiUrl: 'https://api.example.com' }
+});
+
+container.bind(LOGGER).toValue(console);
+container.bind(UserService).toSelf();
+
+// 4. Resolve and use
+const userService = container.resolve(UserService);
+```
+
+## Core Decorators
+
+### @Injectable(scope?)
+Marks class as injectable with optional scope:
+- @Injectable() or @Injectable('singleton') - One instance per container (default)
+- @Injectable('prototype') - New instance each resolution
+- @Injectable('transient') - Always new instance
+
+### @Inject(token)
+Injects dependency into property:
+- @Inject(SomeClass) - Inject by class constructor
+- @Inject(SOME_TOKEN) - Inject by metadata key token
+
+### @PostConstruct
+Method called after all dependencies injected:
+```typescript
+@PostConstruct
+async initialize() { /* setup code */ }
+```
+
+### @PreDestroy
+Method called when container disposed:
+```typescript
+@PreDestroy
+cleanup() { /* cleanup code */ }
+```
+
+## Registration Methods
+
+### Direct Registration
+```typescript
+// Class provider
+container.register({
+  type: 'class',
+  token: UserService,
+  useClass: UserServiceImpl,
+  scope: ServiceScope.SINGLETON
+});
+
+// Value provider
+container.register({
+  type: 'value',
+  token: 'API_KEY',
+  useValue: 'secret-key'
+});
+
+// Factory provider
+container.register({
+  type: 'factory',
+  token: 'HTTP_CLIENT',
+  useFactory: (config) => new HttpClient(config),
+  deps: [CONFIG_TOKEN]
+});
+```
+
+### Fluent API
+```typescript
+// Bind to implementation
+container.bind(UserService).to(UserServiceImpl).inSingletonScope();
+
+// Bind to value
+container.bind('API_URL').toValue('https://api.example.com');
+
+// Bind to factory with dependencies
+container.bind('HTTP_CLIENT')
+  .toFactory((config) => new HttpClient(config))
+  .withDependencies(CONFIG_TOKEN);
+
+// Bind to self
+container.bind(UserService).toSelf();
+```
+
+## Service Scopes
+- **SINGLETON**: One instance per container (cached)
+- **PROTOTYPE**: New instance per resolution
+- **TRANSIENT**: Always new instance (no caching)
+
+## Type-Safe Tokens
+Always use createMetadataKey<T>() for injection tokens:
+```typescript
+const DATABASE_URL = createMetadataKey<string>('database.url');
+const LOGGER = createMetadataKey<Logger>('logger');
+const CONFIG = createMetadataKey<AppConfig>('config');
+```
+
+## Error Handling
+- ServiceNotFoundError: Service not registered
+- CircularDependencyError: Circular dependency detected
+- InvalidProviderError: Invalid provider configuration
+
+## Container Options
+```typescript
+const container = new Container({
+  defaultScope: ServiceScope.SINGLETON,
+  autoBindInjectable: true,
+  throwOnMissingDependencies: true,
+  enableCaching: true
+});
+```
+
+## Child Containers
+```typescript
+const childContainer = parentContainer.createChild();
+// Child inherits parent services but can override them
+```
+
+## Lifecycle Management
+```typescript
+// Cleanup all resources
+await container.dispose();
+```
+
+## TypeScript Configuration Required
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "experimentalDecorators": false,
+    "emitDecoratorMetadata": false,
+    "useDefineForClassFields": false
+  }
+}
+```
+
+## Common Patterns
+
+### Configuration Pattern
+```typescript
+const CONFIG = createMetadataKey<AppConfig>('config');
+
+@Injectable()
+class DatabaseService {
+  @Inject(CONFIG)
+  private config!: AppConfig;
+}
+
+container.bind(CONFIG).toValue({
+  host: 'localhost',
+  port: 5432
+});
+```
+
+### Logger Pattern
+```typescript
+const LOGGER = createMetadataKey<Logger>('logger');
+
+@Injectable()
+class UserService {
+  @Inject(LOGGER)
+  private logger!: Logger;
+}
+
+container.bind(LOGGER).toValue(console);
+```
+
+### Repository Pattern
+```typescript
+@Injectable()
+class UserRepository {
+  @Inject(DATABASE)
+  private db!: Database;
+  
+  async findById(id: string) {
+    return this.db.query('SELECT * FROM users WHERE id = ?', [id]);
+  }
+}
+```
+
+### Factory Pattern
+```typescript
+container.bind('HTTP_CLIENT')
+  .toFactory((config: Config) => {
+    return new HttpClient({
+      baseURL: config.apiUrl,
+      timeout: config.timeout
+    });
+  })
+  .withDependencies(CONFIG);
+```
+
+## Best Practices for AI Code Generation
+1. Always use createMetadataKey<T>() for injection tokens
+2. Prefer fluent API for readable service registration
+3. Use appropriate service scopes based on lifecycle needs
+4. Include @PostConstruct for initialization logic
+5. Include @PreDestroy for cleanup logic
+6. Handle DI errors with specific error types
+7. Always call container.dispose() for cleanup
+8. Use child containers for isolated scopes
+9. Keep services focused and testable
+10. Use interfaces for better decoupling
+
+This library is ideal for TypeScript 5 applications requiring modern, type-safe dependency injection with decorator support.

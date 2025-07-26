@@ -23,3 +23,6 @@ TypeScript 5의 Modern Decorator를 활용한 Dependency Injection(DI) 및 Inver
 - `npm run test`: 테스트 실행
 - `npm run lint`: 린트 검사
 - `npm run typecheck`: 타입 검사
+
+## AI 지침 파일
+@AI_INSTRUCTIONS.md
