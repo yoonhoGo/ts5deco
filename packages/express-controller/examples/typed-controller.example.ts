@@ -100,7 +100,7 @@ export class UserController {
       });
     }
 
-    return JsonResponse.ok<User>(user);
+    return JsonResponse.created<User>(user);
   }
 
   /**

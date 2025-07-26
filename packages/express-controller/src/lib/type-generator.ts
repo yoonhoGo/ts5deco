@@ -65,7 +65,7 @@ export async function generateTypes(options: GenerateTypesOptions): Promise<void
     execSync(openapiCmd, { stdio: 'inherit' });
     console.log(`✅ Generated types: ${outputFile}`);
   } catch (error) {
-    throw new Error(`Failed to generate types: ${error.message}`);
+    throw new Error(`Failed to generate types: ${error instanceof Error ? error.message : String(error)}`);
   }
 
   // 스키마 이름 추출
@@ -92,7 +92,7 @@ async function extractSchemaNames(generatedFilePath: string): Promise<string[]> 
     const content = await fs.readFile(generatedFilePath, 'utf8');
     const schemaMatch = content.match(/schemas:\s*{([^}]+)}/s);
     
-    if (!schemaMatch) {
+    if (!schemaMatch || !schemaMatch[1]) {
       return [];
     }
     
@@ -102,12 +102,14 @@ async function extractSchemaNames(generatedFilePath: string): Promise<string[]> 
     let match;
     
     while ((match = regex.exec(schemas)) !== null) {
-      schemaNames.push(match[1]);
+      if (match[1]) {
+        schemaNames.push(match[1]);
+      }
     }
     
     return schemaNames;
   } catch (error) {
-    console.warn('Warning: Could not extract schema names:', error.message);
+    console.warn('Warning: Could not extract schema names:', error instanceof Error ? error.message : String(error));
     return [];
   }
 }

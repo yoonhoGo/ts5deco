@@ -38,7 +38,7 @@ program
       
       console.log('✨ Type generation completed successfully!');
     } catch (error) {
-      console.error('❌ Error generating types:', error.message);
+      console.error('❌ Error generating types:', error instanceof Error ? error.message : String(error));
       process.exit(1);
     }
   });
@@ -60,7 +60,7 @@ program
       console.log('2. Run: npx ts5deco-express-controller generate');
       console.log('3. Import types in your controllers');
     } catch (error) {
-      console.error('❌ Error initializing project:', error.message);
+      console.error('❌ Error initializing project:', error instanceof Error ? error.message : String(error));
       process.exit(1);
     }
   });
