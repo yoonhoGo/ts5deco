@@ -7,7 +7,8 @@
     "declarationDir": "./dist",
     "emitDeclarationOnly": false,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "strict": true
   },
   "include": [
     "src/**/*"

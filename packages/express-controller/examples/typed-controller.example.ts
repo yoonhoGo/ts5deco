@@ -23,7 +23,7 @@ import type {
   UpdateUserRequest,
   ErrorResponse,
   PaginatedResponse
-} from '../src/types/api';
+} from './api';
 
 // 타입 안전한 응답 타입 정의
 type GetUsersResponse = JsonResponse<PaginatedResponse<User>, 200> | JsonResponse<ErrorResponse, 500>;
@@ -100,7 +100,7 @@ export class UserController {
       });
     }
 
-    return JsonResponse.created<User>(user);
+    return JsonResponse.ok<User>(user);
   }
 
   /**

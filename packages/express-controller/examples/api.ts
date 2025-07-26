@@ -6,7 +6,7 @@
 import type { ExtractSchema, ExtractResponse } from './openapi-utils';
 
 // 생성된 타입이 있을 때만 import (초기에는 주석 처리)
-import type { paths, components } from './generated/api';
+import type { paths, components } from './types/generated/api';
 
 /**
  * API 스키마 타입들
