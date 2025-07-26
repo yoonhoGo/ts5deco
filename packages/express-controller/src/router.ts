@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { Request, Response, NextFunction } from 'express';
 import { ControllerConstructor } from './types';
 import { getControllerMetadata, getRouteMetadata } from './metadata';
+import { BaseResponse } from './responses/BaseResponse';
 
 /**
  * 컨트롤러에서 Express Router를 생성합니다
@@ -87,8 +88,19 @@ function createMethodHandler(controllerInstance: any, propertyKey: string | symb
       // 메서드 실행 - req, res, next를 직접 전달
       const result = await controllerInstance[propertyKey](req, res, next);
 
-      // 결과가 있고 응답이 아직 전송되지 않았다면 JSON으로 응답
-      if (result !== undefined && !res.headersSent) {
+      // 응답이 이미 전송되었다면 아무것도 하지 않음
+      if (res.headersSent) {
+        return;
+      }
+
+      // BaseResponse 인스턴스인 경우 send 메서드 호출
+      if (result instanceof BaseResponse) {
+        result.send(res);
+        return;
+      }
+
+      // 결과가 있다면 JSON으로 응답 (기존 방식 유지)
+      if (result !== undefined) {
         res.json(result);
       }
     } catch (error) {

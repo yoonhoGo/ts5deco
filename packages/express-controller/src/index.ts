@@ -9,3 +9,4 @@ export * from './decorators/middleware';
 export * from './types';
 export * from './router';
 export * from './metadata';
+export * from './responses';
