@@ -39,12 +39,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ts5deco/inject.git"
+    "url": "git+https://github.com/yoonhoGo/ts5deco.git"
   },
   "bugs": {
-    "url": "https://github.com/ts5deco/inject/issues"
+    "url": "https://github.com/yoonhoGo/ts5deco/issues"
   },
-  "homepage": "https://github.com/ts5deco/inject#readme",
+  "homepage": "https://github.com/yoonhoGo/ts5deco#readme",
   "devDependencies": {
     "@types/jest": "^29.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

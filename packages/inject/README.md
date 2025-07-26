@@ -460,4 +460,4 @@ MIT License - see [LICENSE](./LICENSE) file for details.
 
 ## Support
 
-If you have any questions or issues, please open an issue on [GitHub](https://github.com/ts5deco/inject/issues).
+If you have any questions or issues, please open an issue on [GitHub](https://github.com/yoonhoGo/ts5deco/issues).
