@@ -7,13 +7,13 @@ import { HttpMethod, MiddlewareFunction } from '../types';
 import { addRouteMetadata } from '../metadata';
 import { convertOpenApiPathToExpressPath } from '../utils/openapi-path-converter';
 import type { ExtractPaths, LowercaseMethod } from '../types/openapi';
-import type { 
-  ApiResponse, 
-  ValidStatusCodes 
+import type {
+  ApiResponse,
+  ValidStatusCodes
 } from '../types/branded-response';
 
-// Re-export for convenience  
-export type { ApiResponse as TypedApiResponse } from '../types/branded-response';
+// Re-export for convenience
+export type { ApiResponse } from '../types/branded-response';
 import { createApiResponse } from '../types/branded-response';
 
 /**
@@ -34,10 +34,10 @@ function createTypedRouteDecorator<TPaths = any>(method: HttpMethod) {
     // 컴파일 타임에 경로와 메서드가 유효한지 검증
     type ValidatedMethod = LowercaseMethod<typeof method>;
     type ValidatedPath = TPath extends keyof TPaths ? TPath : never;
-    
+
     // 허용된 상태 코드들을 미리 계산
     type AllowedStatuses = ValidStatusCodes<TPaths, ValidatedPath, ValidatedMethod>;
-    
+
     return function <
       TReturn extends ApiResponse<TPaths, ValidatedPath, ValidatedMethod>
     >(
@@ -45,18 +45,18 @@ function createTypedRouteDecorator<TPaths = any>(method: HttpMethod) {
       context: ClassMethodDecoratorContext
     ): void {
       const { middlewares = [] } = options;
-      
+
       // 컴파일 타임 검증: 경로가 TPaths에 존재하는지 확인
       const _pathValidation: ValidatedPath = path as ValidatedPath;
-      
+
       // 컴파일 타임 검증: 허용된 상태 코드가 있는지 확인
-      const _statusValidation: AllowedStatuses extends never 
-        ? "No valid status codes for this path and method" 
+      const _statusValidation: AllowedStatuses extends never
+        ? "No valid status codes for this path and method"
         : AllowedStatuses = {} as any;
 
       // OpenAPI 경로를 Express 경로로 변환
       const expressPath = convertOpenApiPathToExpressPath(path);
-      
+
       // 경로 정규화
       const normalizedPath = ('/' + expressPath).replace(/\/+/g, '/').replace(/\/$/, '') || '/';
 
@@ -133,9 +133,9 @@ export function createResponseFor<
  */
 export type TypeValidation<TPaths, TPath extends keyof TPaths, TMethod extends string> = {
   pathExists: TPath extends keyof TPaths ? true : "Path does not exist in OpenAPI spec";
-  methodExists: TPath extends keyof TPaths 
-    ? TMethod extends keyof TPaths[TPath] 
-      ? true 
+  methodExists: TPath extends keyof TPaths
+    ? TMethod extends keyof TPaths[TPath]
+      ? true
       : "Method does not exist for this path"
     : "Cannot validate method because path does not exist";
   hasResponses: TPath extends keyof TPaths
